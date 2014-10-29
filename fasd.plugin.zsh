@@ -21,7 +21,7 @@ if [[ "${commands[fasd]}" -nt "$cache_file" || ! -s "$cache_file"  ]]; then
   init_args=(zsh-hook)
 
   # Set fasd completion init arguments
-  init_args+=(zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install)
+  init_args+=(zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install posix-alias)
 
   # Cache init code.
   fasd --init "$init_args[@]" >! "$cache_file" 2> /dev/null
