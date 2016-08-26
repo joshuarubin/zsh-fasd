@@ -41,9 +41,9 @@ alias es="fasd -ftie nvim -b nviminfo"
 alias nv="fasd -ftb nviminfo"
 alias nvs="fasd -ftib nviminfo"
 
-if (( $+commands[fzf] )); then
+if (( $+commands[fzf-tmux] )); then
   fasd_i() {
-    fasd -l "$@" | fzf --tac --no-sort
+    fasd -l "$@" | fzf-tmux --tac --no-sort
   }
 
   fasd_i_cd() {
@@ -53,7 +53,7 @@ if (( $+commands[fzf] )); then
       cd "$_fasd_all"
       return
     fi
-    local _fasd_ret="$(fasd -ld "$@" | fzf --tac --no-sort)"
+    local _fasd_ret="$(fasd -ld "$@" | fzf-tmux --tac --no-sort)"
     [ -d "$_fasd_ret" ] && cd "$_fasd_ret" || printf %s\n "$_fasd_ret"
   }
 
@@ -64,7 +64,7 @@ if (( $+commands[fzf] )); then
       nvim "$_fasd_all"
       return
     fi
-    local _fasd_ret="$(fasd -lfb nviminfo "$@" | fzf --tac --no-sort)"
+    local _fasd_ret="$(fasd -lfb nviminfo "$@" | fzf-tmux --tac --no-sort)"
     [ -f "$_fasd_ret" ] && nvim "$_fasd_ret" || printf %s\n "$_fasd_ret"
   }
 
