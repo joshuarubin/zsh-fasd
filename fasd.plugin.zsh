@@ -35,11 +35,10 @@ unset cache_file init_args
 # Aliases
 #
 
+alias z='fasd_cd -di'
 alias j="fasd_cd -di"
-alias e="fasd -fte nvim -b nviminfo" # quick opening files with vim
-alias es="fasd -ftie nvim -b nviminfo"
-alias nv="fasd -ftb nviminfo"
-alias nvs="fasd -ftib nviminfo"
+alias e="fasd -ftie nvim -b nviminfo" # quick opening files with vim
+alias nv="fasd -ftib nviminfo"
 
 if (( $+commands[fzf-tmux] )); then
   fasd_i() {
@@ -72,8 +71,9 @@ if (( $+commands[fzf-tmux] )); then
   alias sd="fasd_i -d"
   alias sf="fasd_i -f"
   alias zz="fasd_i_cd"
-  alias nvs="fasd_i -ftb nviminfo"
 
+  alias z="fasd_i_cd"
   alias j="fasd_i_cd"
-  alias es="fasd_i_e"
+  alias e="fasd_i_e"
+  alias nv="fasd_i -ftb nviminfo"
 fi
