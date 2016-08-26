@@ -35,13 +35,19 @@ unset cache_file init_args
 # Aliases
 #
 
+alias j="fasd_cd -di"
+alias e="fasd -fte nvim -b nviminfo" # quick opening files with vim
+alias es="fasd -ftie nvim -b nviminfo"
+alias nv="fasd -ftb nviminfo"
+alias nvs="fasd -ftib nviminfo"
+
 if (( $+commands[fzf] )); then
   fasd_i() {
     fasd -l "$@" | fzf --tac --no-sort
   }
 
   fasd_i_cd() {
-    local _fasd_all=$(fasd -ld "$@" | head -n 2)
+    local _fasd_all=$(fasd -ld "$@")
     [ -z "$_fasd_all" ] && return
     if [ "$(echo "$_fasd_all" | wc -l)" -eq 1 ]; then
       cd "$_fasd_all"
@@ -51,12 +57,23 @@ if (( $+commands[fzf] )); then
     [ -d "$_fasd_ret" ] && cd "$_fasd_ret" || printf %s\n "$_fasd_ret"
   }
 
-  alias s='fasd_i'
-  alias sd='fasd_i -d'
-  alias sf='fasd_i -f'
-  alias zz='fasd_i_cd'
+  fasd_i_e() {
+    local _fasd_all=$(fasd -lfb nviminfo "$@")
+    [ -z "$_fasd_all" ] && return
+    if [ "$(echo "$_fasd_all" | wc -l)" -eq 1 ]; then
+      nvim "$_fasd_all"
+      return
+    fi
+    local _fasd_ret="$(fasd -lfb nviminfo "$@" | fzf --tac --no-sort)"
+    [ -f "$_fasd_ret" ] && nvim "$_fasd_ret" || printf %s\n "$_fasd_ret"
+  }
 
-  alias j='fasd_i_cd'
-else
-  alias j="fasd_cd -d -i"
+  alias s="fasd_i"
+  alias sd="fasd_i -d"
+  alias sf="fasd_i -f"
+  alias zz="fasd_i_cd"
+  alias nvs="fasd_i -ftb nviminfo"
+
+  alias j="fasd_i_cd"
+  alias es="fasd_i_e"
 fi
