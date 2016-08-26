@@ -31,18 +31,32 @@ source "$cache_file"
 
 unset cache_file init_args
 
-function fasd_cd {
-  local fasd_ret="$(fasd -d "$@")"
-  if [[ -d "$fasd_ret" ]]; then
-    cd "$fasd_ret"
-  else
-    print "$fasd_ret"
-  fi
-}
-
 #
 # Aliases
 #
 
-# Changes the current working directory interactively.
-alias j='fasd_cd -i'
+if (( $+commands[fzf] )); then
+  fasd_i() {
+    fasd -l "$@" | fzf --tac --no-sort
+  }
+
+  fasd_i_cd() {
+    local _fasd_all=$(fasd -ld "$@" | head -n 2)
+    [ -z "$_fasd_all" ] && return
+    if [ "$(echo "$_fasd_all" | wc -l)" -eq 1 ]; then
+      cd "$_fasd_all"
+      return
+    fi
+    local _fasd_ret="$(fasd -ld "$@" | fzf --tac --no-sort)"
+    [ -d "$_fasd_ret" ] && cd "$_fasd_ret" || printf %s\n "$_fasd_ret"
+  }
+
+  alias s='fasd_i'
+  alias sd='fasd_i -d'
+  alias sf='fasd_i -f'
+  alias zz='fasd_i_cd'
+
+  alias j='fasd_i_cd'
+else
+  alias j="fasd_cd -d -i"
+fi
